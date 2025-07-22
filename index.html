@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP视频解析工具</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 480px;
+            max-width: 90%;
+            text-align: center;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: rgba(255, 255, 255, 0.05);
+            filter: blur(50px);
+            z-index: -1;
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 35px;
+            font-size: 28px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background-color: #007bff;
+            border-radius: 2px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            background-color: #f7f9fc;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .input-group label {
+            flex-shrink: 0;
+            color: #555;
+            font-size: 15px;
+            font-weight: 500;
+            padding-right: 15px;
+        }
+        .input-group input[type="text"] {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: #333;
+            outline: none;
+        }
+        .input-group input[type="text"]::placeholder {
+            color: #aaa;
+        }
+        .input-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #6c757d;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .input-group button:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+        }
+        .input-group button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+        .button-grid button {
+            padding: 18px 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-image: linear-gradient(45deg, var(--color1) 0%, var(--color2) 100%);
+        }
+        .button-grid button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        .button-grid button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #iqiyiBtn { --color1: #ff4d6b; --color2: #e02447; }
+        #tencentBtn { --color1: #008cff; --color2: #0056b3; }
+        #youkuBtn { --color1: #1abc9c; --color2: #16a085; }
+        #hitmuxBtn { --color1: #ff9100; --color2: #e65100; }
+        #playVipBtn { --color1: #6a11cb; --color2: #2575fc; grid-column: span 2; }
+
+        .reminder {
+            color: #777;
+            font-size: 14px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            border: 1px dashed #ced4da;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            color: #999;
+            text-align: left;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            margin-top: 25px;
+            line-height: 1.6;
+            background-color: #fdfdfd;
+            border-radius: 8px;
+        }
+        .disclaimer strong {
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VIP视频解析</h1>
+
+        <div class="input-group">
+            <label for="movieLinkInput">视频链接：</label>
+            <input type="text" id="movieLinkInput" placeholder="在此粘贴视频链接">
+            <button id="clearButton">清空</button>
+        </div>
+
+        <div class="button-grid">
+            <button id="iqiyiBtn">爱奇艺</button>
+            <button id="tencentBtn">腾讯视频</button>
+            <button id="youkuBtn">优酷视频</button>
+            <button id="hitmuxBtn">Hitmux官网</button>
+            <button id="playVipBtn">立即播放VIP视频</button>
+        </div>
+
+        <p class="reminder">
+            温馨提示：将各大视频网站的VIP视频链接复制到上方输入框内，点击“立即播放VIP视频”按钮即可解析播放。
+        </p>
+
+        <div class="disclaimer">
+            <strong>免责声明：</strong>
+            <p>本软件为自由开源项目，禁止用于任何商业用途！！！</p>
+            <p>本工具仅供学习交流与技术测试之用，旨在探讨网页视频解析技术，不提供任何内容存储、传播服务。请勿用于任何非法用途，使用者应自行承担因滥用本工具而产生的一切法律责任。请尊重影视作品版权，支持正版内容。如侵犯了您的权益，请及时联系删除。</p>
+            <p>开发者不承担任何直接或间接的损失责任。</p>
+        </div>
+    </div>
+
+    <script>
+        const movieLinkInput = document.getElementById('movieLinkInput');
+        const clearButton = document.getElementById('clearButton');
+        const iqiyiBtn = document.getElementById('iqiyiBtn');
+        const tencentBtn = document.getElementById('tencentBtn');
+        const youkuBtn = document.getElementById('youkuBtn');
+        const playVipBtn = document.getElementById('playVipBtn');
+        const hitmuxBtn = document.getElementById('hitmuxBtn');
+
+        function openIqy() {
+            window.open('https://www.iqiyi.com', '_blank');
+        }
+
+        function openTx() {
+            window.open('https://v.qq.com', '_blank');
+        }
+
+        function openYq() {
+            window.open('https://www.youku.com/', '_blank');
+        }
+
+        function openHitmux() {
+            window.open('https://hitmux.top', '_blank');
+        }
+
+        function playVipVideo() {
+            const urlPrefix = 'https://jx.xmflv.cc/?url=';
+            const videoLink = movieLinkInput.value.trim();
+
+            if (videoLink) {
+                window.open(urlPrefix + videoLink, '_blank');
+            } else {
+                alert('请输入有效的视频链接！');
+            }
+        }
+
+        function clearInput() {
+            movieLinkInput.value = '';
+        }
+
+        iqiyiBtn.addEventListener('click', openIqy);
+        tencentBtn.addEventListener('click', openTx);
+        youkuBtn.addEventListener('click', openYq);
+        hitmuxBtn.addEventListener('click', openHitmux);
+        playVipBtn.addEventListener('click', playVipVideo);
+        clearButton.addEventListener('click', clearInput);
+    </script>
+</body>
+</html>
